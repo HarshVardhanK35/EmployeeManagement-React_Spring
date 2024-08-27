@@ -1,10 +1,14 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import { React, useState, useEffect } from "react";
 import fetchEmployees from "../services/EmployeeService";
+import { useNavigate } from "react-router-dom";
 
 const ListEmployeeComponent = () => {
 
   const [employees, setEmployees] = useState([])
+
+  const navigator = useNavigate()
 
   useEffect(() => {
     fetchEmployees()
@@ -16,9 +20,22 @@ const ListEmployeeComponent = () => {
       })
   }, [])
 
+  const addNewEmployee = () => {
+    navigator("/add-employee")
+  }
+
+  const showEmployeesList = () => {
+    navigator('/employees')
+  }
+
 	return (
 		<div>
-			<h2 className="text-center">List of Employees</h2>
+			<h2 className="text-center">Employee Management System</h2>
+
+      <div>
+        <button type="button" className="btn btn-link" onClick={showEmployeesList}>Employees List</button>
+        <button type="button" className="btn btn-link" onClick={addNewEmployee}>Add Employee</button>
+      </div>
 
 			<table className = 'table table-bordered'>
 
