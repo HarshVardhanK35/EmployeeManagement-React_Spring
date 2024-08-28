@@ -1,7 +1,6 @@
-/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import { React, useState, useEffect } from "react";
-import fetchEmployees from "../services/EmployeeService";
+import EmployeeService from "../services/EmployeeService";
 import { useNavigate } from "react-router-dom";
 
 const ListEmployeeComponent = () => {
@@ -11,7 +10,7 @@ const ListEmployeeComponent = () => {
   const navigator = useNavigate()
 
   useEffect(() => {
-    fetchEmployees()
+    EmployeeService.fetchEmployees()
       .then((res) => {
         setEmployees(res.data)
       })

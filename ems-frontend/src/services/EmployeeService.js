@@ -6,4 +6,11 @@ const fetchEmployees = () => {
   return axios.get(API_URL)
 }
 
-export default fetchEmployees;
+const postEmployee = (employeeObject) => {
+  return axios.post(API_URL, employeeObject)
+}
+
+export default {
+  fetchEmployees,
+  postEmployee
+}
