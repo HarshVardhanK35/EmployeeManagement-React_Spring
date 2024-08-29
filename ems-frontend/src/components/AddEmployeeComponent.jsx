@@ -2,6 +2,7 @@
 import { React, useState } from "react";
 import EmployeeService from "../services/EmployeeService";
 import { useNavigate } from "react-router-dom";
+import HeaderComponent from "./HeaderComponent";
 
 const AddEmployeeComponent = () => {
 	const navigator = useNavigate();
@@ -16,6 +17,10 @@ const AddEmployeeComponent = () => {
     email: ''
   });
 
+  const showEmployeesList = () => {
+    navigator('/employees')
+  }
+
 	const handleFirstName = (e) => {
 		setFirstName(e.target.value);
 	};
@@ -26,16 +31,34 @@ const AddEmployeeComponent = () => {
 		setEmail(e.target.value);
 	};
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 
     if (validateForm()) {
       const employeeObject = { firstName, lastName, email };
-      console.log(employeeObject);
+      // console.log(employeeObject);
+
+      try{
+        const res = await EmployeeService.postEmployee(employeeObject)
+        // console.log(res.data)
+        navigator('/employees')
+      }
+      catch(err) {
+        console.error(err)
+        if (err.response && err.response.status === 409) {
+          alert("An employee with this email already exists.")
+        }
+        else if (err.response && err.response.status >= 500) {
+          alert("A server error occurred. Please try again later.")
+        }
+        else{
+          alert("An unexpected error occurred. Please try again.")
+        }
+      }
 
       EmployeeService.postEmployee(employeeObject)
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           navigator("/employees");
         })
         .catch((err) => {
@@ -47,30 +70,38 @@ const AddEmployeeComponent = () => {
   const validateForm = () => {
 
 		const errorObj = {...errors};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 		let isValid = true;
 
 		if (firstName.trim() === "") {
-			errorObj.firstName = "Enter First Name";
+			errorObj.firstName = "First Name is required";
 			isValid = false;
 		}
     else{
       errorObj.firstName = ''
     }
+
 		if (lastName.trim() === "") {
-			errorObj.lastName = "Enter Last Name";
+			errorObj.lastName = "Last Name is required";
 			isValid = false;
 		}
     else{
       errorObj.firstName = ''
     }
+
 		if (email.trim() === "") {
-			errorObj.email = "Enter Email";
+			errorObj.email = "Email is required";
 			isValid = false;
 		}
+    else if(!emailRegex.test(email)) {
+      errorObj.email = "Enter a Valid Email";
+			isValid = false;
+    }
     else{
       errorObj.firstName = ''
     }
+
 		setErrors(errorObj);
 		return isValid;
 	};
@@ -78,13 +109,20 @@ const AddEmployeeComponent = () => {
 	return (
 		<>
 			<div className="container">
+
 				<br /> <br />
-				<h1>Add Employee</h1>
+        <div>
+          <h1>Add Employee</h1>
+          <button type="button" className="btn btn-link" onClick={showEmployeesList}>Employees List</button>
+        </div>
+
 				<div className="">
 					<form action="">
 						<br />
+
             <div className="form-group" style={{ display: "flex", flexDirection: "column", gap: "10px", maxWidth: "50VW"}}>
-						<div style={{ display: "flex", alignItems: "center", gap: "10px" }} >
+
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }} >
 							<label htmlFor="firstName" style={{ minWidth: "80px" }}>First Name</label>
 							<input
 								type="text"
@@ -96,6 +134,7 @@ const AddEmployeeComponent = () => {
 							/>
 							{errors.firstName && <div className="invalid-feedback">{errors.firstName}</div>}
 						</div>
+
 							<div style={{ display: "flex", alignItems: "center", gap: "10px" }} >
 								<label htmlFor="lastName" style={{ minWidth: "80px" }}>Last Name</label>
 								<input
@@ -108,6 +147,7 @@ const AddEmployeeComponent = () => {
 								/>
                 {errors.lastName && <div className="invalid-feedback">{errors.lastName}</div>}
               </div>
+
 							<div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
 								<label htmlFor="email" style={{ minWidth: "80px" }}>Email Id</label>
 								<input
@@ -120,13 +160,14 @@ const AddEmployeeComponent = () => {
 								/>
                 {errors.email && <div className="invalid-feedback">{errors.email}</div>}
 							</div>
+
 						</div>
-						<button type="submit" className="btn btn-primary" style={{ marginTop: "20px" }} onClick={handleSubmit}>Submit</button>
+						<button type="submit" className="btn btn-primary" style={{ marginTop: "20px" }} onClick={handleSubmit}>Add Employee</button>
 					</form>
 				</div>
+
 			</div>
 		</>
 	);
 };
-
 export default AddEmployeeComponent;

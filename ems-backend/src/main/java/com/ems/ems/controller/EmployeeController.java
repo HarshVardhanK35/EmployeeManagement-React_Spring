@@ -1,8 +1,10 @@
 package com.ems.ems.controller;
 
 import com.ems.ems.dto.EmployeeDto;
+import com.ems.ems.exception.ResourceAlreadyExistsExemption;
 import com.ems.ems.service.EmployeeService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,18 +13,24 @@ import java.util.List;
 
 @CrossOrigin("*")
 @AllArgsConstructor
+
 @RestController
 @RequestMapping("/api/employees")
-
 public class EmployeeController {
 
+    @Autowired
     private EmployeeService employeeService;
 
     // POST Employee REST API
     @PostMapping
     public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeDto employeeDto){
+        try{
         EmployeeDto savedEmployee = employeeService.createEmployee(employeeDto);
         return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
+        }
+        catch (ResourceAlreadyExistsExemption e){
+            return new ResponseEntity<>(null, HttpStatus.CONFLICT) ;
+        }
     }
 
     // GET Employee REST API

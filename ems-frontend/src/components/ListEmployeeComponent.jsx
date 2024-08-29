@@ -44,6 +44,7 @@ const ListEmployeeComponent = () => {
 						<th scope="col">First Name</th>
 						<th scope="col">Last Name</th>
 						<th scope="col">Email ID</th>
+						<th scope="col">Operation</th>
 					</tr>
 				</thead>
 
