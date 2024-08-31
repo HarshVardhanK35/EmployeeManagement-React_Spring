@@ -1,4 +1,3 @@
-import "./App.css";
 import ListEmployeeComponent from "./components/ListEmployeeComponent";
 import AddEmployeeComponent from "./components/AddEmployeeComponent";
 import { BrowserRouter, Routes, Route } from "react-router-dom";

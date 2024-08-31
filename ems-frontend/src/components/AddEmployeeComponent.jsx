@@ -11,20 +11,26 @@ const AddEmployeeComponent = () => {
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
 	const [email, setEmail] = useState("");
+	const [address, setAddress] = useState("");
+  const [contactNumber, setContactNumber] = useState("")
 
 	const [errors, setErrors] = useState({
     firstName: '',
     lastName: '',
-    email: ''
+    email: '',
+    address: '',
+    contactNumber: ''
   });
 
   useEffect(() => {
     if(id) {
       EmployeeService.fetchAnEmployee(id)
       .then((res) => {
+        // console.log(res.data)
         setFirstName(res.data.firstName)
         setLastName(res.data.lastName)
         setEmail(res.data.email)
+        setAddress(res.data.address)
       })
       .catch((err) => {
         console.error(err)
@@ -45,13 +51,16 @@ const AddEmployeeComponent = () => {
 	const handleEmail = (e) => {
 		setEmail(e.target.value);
 	};
+  const handleAddress = (e) => {
+		setAddress(e.target.value);
+	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
     if (validateForm()) {
 
-      const employeeObject = { firstName, lastName, email };
+      const employeeObject = { firstName, lastName, email, address };
 
       if(id) {
         EmployeeService.updateEmployee(id, employeeObject)
@@ -103,21 +112,24 @@ const AddEmployeeComponent = () => {
 		if (lastName.trim() === "") {
 			errorObj.lastName = "Last Name is required";
 			isValid = false;
-		}
-    else{
-      errorObj.firstName = ''
+		}else{
+      errorObj.lastName = ''
     }
 
 		if (email.trim() === "") {
 			errorObj.email = "Email is required";
 			isValid = false;
-		}
-    else if(!emailRegex.test(email)) {
+		}else if(!emailRegex.test(email)) {
       errorObj.email = "Enter a Valid Email";
 			isValid = false;
+    }else{
+      errorObj.email = ''
     }
-    else{
-      errorObj.firstName = ''
+
+    if(address.trim()) {
+      errorObj.address = "Address is required"
+    }else{
+      errorObj.address = ''
     }
 
 		setErrors(errorObj);
@@ -159,6 +171,7 @@ const AddEmployeeComponent = () => {
             <div className="form-group" style={{ display: "flex", flexDirection: "column", gap: "10px", maxWidth: "50VW"}}>
 
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }} >
+
 							<label htmlFor="firstName" style={{ minWidth: "80px" }}>First Name</label>
 							<input
 								type="text"
@@ -171,7 +184,7 @@ const AddEmployeeComponent = () => {
 							{errors.firstName && <div className="invalid-feedback">{errors.firstName}</div>}
 						</div>
 
-							<div style={{ display: "flex", alignItems: "center", gap: "10px" }} >
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }} >
 								<label htmlFor="lastName" style={{ minWidth: "80px" }}>Last Name</label>
 								<input
                   type="text"
@@ -188,7 +201,7 @@ const AddEmployeeComponent = () => {
 								<label htmlFor="email" style={{ minWidth: "80px" }}>Email Id</label>
 								<input
 									type="text"
-									placeholder="Enter First Name"
+									placeholder="Enter Email"
                   name="email"
 									value={email}
                   className= {`form-control ${errors.email ? 'is-invalid' : ''}`}
@@ -196,6 +209,22 @@ const AddEmployeeComponent = () => {
 								/>
                 {errors.email && <div className="invalid-feedback">{errors.email}</div>}
 							</div>
+
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <label htmlFor="location" style={{ minWidth: "80px" }}>Location</label>
+                <select
+                  name = "address"
+                  value = {address}
+                  className = {`form-control ${errors.address ? 'is-invalid' : ''}`}
+                  onChange = {handleAddress}
+                >
+                  <option value="">Select Location</option>
+                  <option value="Bangalore">Bangalore</option>
+                  <option value="Chennai">Chennai</option>
+                  <option value="Hyderabad">Hyderabad</option>
+                </select>
+                {errors.address && <div className="invalid-feedback">{errors.location}</div>}
+              </div>
 
 						</div>
             { pageButton() }
