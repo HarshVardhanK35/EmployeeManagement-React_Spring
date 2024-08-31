@@ -9,14 +9,18 @@ const ListEmployeeComponent = () => {
 
   const navigator = useNavigate()
 
-  useEffect(() => {
-    EmployeeService.fetchEmployees()
+  const getAllEmployees = () => {
+    EmployeeService.fetchAllEmployees()
       .then((res) => {
         setEmployees(res.data)
       })
       .catch((err) => {
         console.error(err)
       })
+  }
+
+  useEffect(() => {
+    getAllEmployees()
   }, [])
 
   const addNewEmployee = () => {
@@ -25,6 +29,20 @@ const ListEmployeeComponent = () => {
 
   const showEmployeesList = () => {
     navigator('/employees')
+  }
+
+  const editEmployee = (id) => {
+    navigator(`/edit-employee/${id}`)
+  }
+
+  const deleteEmployee = (id) => {
+    EmployeeService.deleteEmployee(id)
+    .then((res) => {
+      getAllEmployees()
+    })
+    .catch((err) => {
+      console.error(err)
+    })
   }
 
 	return (
@@ -44,7 +62,8 @@ const ListEmployeeComponent = () => {
 						<th scope="col">First Name</th>
 						<th scope="col">Last Name</th>
 						<th scope="col">Email ID</th>
-						<th scope="col">Operation</th>
+						<th scope="col">Edit</th>
+						<th scope="col">Delete</th>
 					</tr>
 				</thead>
 
@@ -53,10 +72,12 @@ const ListEmployeeComponent = () => {
             employees.map((employee) => {
               return (
                 <tr key={employee.id}>
-                  <th scope="row">{employee.id}</th>
+                  <th scope="row"><a href={``}>{employee.id}</a></th>
                   <td>{employee.firstName}</td>
                   <td>{employee.lastName}</td>
                   <td>{employee.email}</td>
+                  <td><button type="button" className="btn btn-link btn-light" onClick={ () => { return editEmployee(employee.id) } }>Edit</button></td>
+                  <td><button type="button" className="btn btn-link btn-light" onClick={ () => { return deleteEmployee(employee.id) } }>Delete</button></td>
                 </tr>
               );
             })

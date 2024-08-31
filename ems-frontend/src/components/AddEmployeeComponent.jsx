@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-vars */
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import EmployeeService from "../services/EmployeeService";
-import { useNavigate } from "react-router-dom";
-import HeaderComponent from "./HeaderComponent";
+import { useNavigate, useParams } from "react-router-dom";
 
 const AddEmployeeComponent = () => {
+
+  const {id} = useParams()
 	const navigator = useNavigate();
 
 	const [firstName, setFirstName] = useState("");
@@ -16,6 +17,20 @@ const AddEmployeeComponent = () => {
     lastName: '',
     email: ''
   });
+
+  useEffect(() => {
+    if(id) {
+      EmployeeService.fetchAnEmployee(id)
+      .then((res) => {
+        setFirstName(res.data.firstName)
+        setLastName(res.data.lastName)
+        setEmail(res.data.email)
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+    }
+  }, [id])
 
   const showEmployeesList = () => {
     navigator('/employees')
@@ -35,35 +50,38 @@ const AddEmployeeComponent = () => {
 		e.preventDefault();
 
     if (validateForm()) {
+
       const employeeObject = { firstName, lastName, email };
-      // console.log(employeeObject);
 
-      try{
-        const res = await EmployeeService.postEmployee(employeeObject)
-        // console.log(res.data)
-        navigator('/employees')
-      }
-      catch(err) {
-        console.error(err)
-        if (err.response && err.response.status === 409) {
-          alert("An employee with this email already exists.")
-        }
-        else if (err.response && err.response.status >= 500) {
-          alert("A server error occurred. Please try again later.")
-        }
-        else{
-          alert("An unexpected error occurred. Please try again.")
-        }
-      }
-
-      EmployeeService.postEmployee(employeeObject)
+      if(id) {
+        EmployeeService.updateEmployee(id, employeeObject)
         .then((res) => {
-          // console.log(res.data);
-          navigator("/employees");
+          console.log(res.data)
+          navigator('/employees')
         })
         .catch((err) => {
-          console.error(err);
-        });
+          console.error(err)
+        })
+      }
+      else {
+        try{
+          const res = await EmployeeService.postEmployee(employeeObject)
+          // console.log(res.data)
+          navigator('/employees')
+        }
+        catch(err) {
+          console.error(err)
+          if (err.response && err.response.status === 409) {
+            alert("An employee with this email already exists.")
+          }
+          else if (err.response && err.response.status >= 500) {
+            alert("A server error occurred. Please try again later.")
+          }
+          else{
+            alert("An unexpected error occurred. Please try again.")
+          }
+        }
+      }
     }
 	};
 
@@ -106,13 +124,31 @@ const AddEmployeeComponent = () => {
 		return isValid;
 	};
 
+  const pageTitle = () => {
+    if(id) {
+      return <h1>Edit Employee</h1>
+    }
+    else{
+      return <h1>Add Employee</h1>
+    }
+  }
+
+  const pageButton = () => {
+    if (id) {
+      return <button type="submit" className="btn btn-primary" style={{ marginTop: "20px" }} onClick={handleSubmit}>Update Employee</button>
+    }
+    else {
+      return <button type="submit" className="btn btn-primary" style={{ marginTop: "20px" }} onClick={handleSubmit}>Add Employee</button>
+    }
+  }
+
 	return (
 		<>
 			<div className="container">
 
 				<br /> <br />
         <div>
-          <h1>Add Employee</h1>
+          { pageTitle() }
           <button type="button" className="btn btn-link" onClick={showEmployeesList}>Employees List</button>
         </div>
 
@@ -162,7 +198,7 @@ const AddEmployeeComponent = () => {
 							</div>
 
 						</div>
-						<button type="submit" className="btn btn-primary" style={{ marginTop: "20px" }} onClick={handleSubmit}>Add Employee</button>
+            { pageButton() }
 					</form>
 				</div>
 
