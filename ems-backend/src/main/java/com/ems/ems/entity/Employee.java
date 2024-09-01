@@ -26,13 +26,12 @@ public class Employee {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "address")
-    private String address;
-
-    @Column(name = "contact_number")
-    private String contactNumber;
-
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
+    @Column(name = "contact_number", nullable = false, unique = true)
+    private String contactNumber;
+
+    @Column(name = "location")
+    private String location;
 }

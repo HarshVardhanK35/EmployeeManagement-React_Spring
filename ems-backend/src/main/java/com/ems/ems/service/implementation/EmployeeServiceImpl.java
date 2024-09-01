@@ -27,10 +27,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeDto createEmployee(EmployeeDto employeeDto) {
-        Optional<Employee> existingEmployee = employeeRepository.findByEmail(employeeDto.getEmail());
 
-        if(existingEmployee.isPresent()){
-            throw new ResourceAlreadyExistsExemption("Employee with this Email already exists!");
+        Optional<Employee> existingEmployeeEmail = employeeRepository.findByEmail(employeeDto.getEmail());
+        if(existingEmployeeEmail.isPresent()){
+            throw new ResourceAlreadyExistsExemption("Employee with this Email and Number already exists!");
+        }
+
+        Optional<Employee> existingEmployeeNumber = employeeRepository.findByContactNumber(employeeDto.getContactNumber());
+        if(existingEmployeeNumber.isPresent()){
+            throw new ResourceAlreadyExistsExemption("Employee with this contact number already exists!");
         }
 
         Employee employee = EmployeeMapper.mapToEmployee(employeeDto);
@@ -48,22 +53,32 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<EmployeeDto> getAllEmployees() {
         List <Employee> allEmployees = employeeRepository.findAll();
-        return allEmployees.stream().map((employee) -> EmployeeMapper.mapToEmployeeDto(employee))
+        return allEmployees.stream()
+                .map((employee) -> EmployeeMapper.mapToEmployeeDto(employee))
                 .collect(Collectors.toList());
     }
 
     @Override
     public EmployeeDto updateEmployee(Long employeeId, EmployeeDto updatedEmployee) {
-
-        Employee employee = employeeRepository.findById(employeeId).orElseThrow(
-                () -> new ResourceNotFound("Employee does not exist with given Id: "+employeeId)
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new ResourceNotFound("Employee does not exist with given Id: "+employeeId)
         );
+
+        Optional<Employee> existingEmployeeEmail = employeeRepository.findByEmail(updatedEmployee.getEmail());
+        if(existingEmployeeEmail.isPresent() && !existingEmployeeEmail.get().getId().equals(employeeId)){
+            throw new ResourceAlreadyExistsExemption("Another employee with this email already exists!");
+        }
+
+        Optional<Employee> existingEmployeeNumber = employeeRepository.findByContactNumber(updatedEmployee.getContactNumber());
+        if(existingEmployeeNumber.isPresent() && !existingEmployeeNumber.get().getId().equals(employeeId)){
+            throw new ResourceAlreadyExistsExemption("Another employee with this contact number already exists!");
+        }
 
         employee.setFirstName(updatedEmployee.getFirstName());
         employee.setLastName(updatedEmployee.getLastName());
         employee.setEmail(updatedEmployee.getEmail());
-        employee.setAddress(updatedEmployee.getAddress());
-        employee.setContactNumber(updatedEmployee.getContactNumber().toString());
+        employee.setContactNumber(updatedEmployee.getContactNumber());
+        employee.setLocation(updatedEmployee.getLocation());
 
         Employee updatedEmployeeObj = employeeRepository.save(employee);
         return EmployeeMapper.mapToEmployeeDto(updatedEmployeeObj);

@@ -55,13 +55,12 @@ const ListEmployeeComponent = () => {
       </div>
 
 			<table className = 'table table-bordered'>
-
 				<thead>
 					<tr>
-						<th scope="col">Employee_id</th>
+						<th scope="col" style={{textAlign: "center"}}>Employee_id</th>
 						<th scope="col">Name</th>
 						<th scope="col">Email ID</th>
-						<th scope="col">Location</th>
+						<th scope="col">Contact Number</th>
 						<th scope="col">Edit</th>
 						<th scope="col">Delete</th>
 					</tr>
@@ -75,7 +74,7 @@ const ListEmployeeComponent = () => {
                   <th scope="row"><a href={``}>{employee.id}</a></th>
                   <td>{`${employee.firstName} ${employee.lastName}`}</td>
                   <td>{employee.email}</td>
-                  <td>{employee.address}</td>
+                  <td>{employee.contactNumber}</td>
                   <td><button type="button" className="btn btn-link btn-light" onClick={ () => { return editEmployee(employee.id) } }>Edit</button></td>
                   <td><button type="button" className="btn btn-link btn-light" onClick={ () => { return deleteEmployee(employee.id) } }>Delete</button></td>
                 </tr>
@@ -83,7 +82,6 @@ const ListEmployeeComponent = () => {
             })
           }
 				</tbody>
-
 			</table>
 		</div>
 	);

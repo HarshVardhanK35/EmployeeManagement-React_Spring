@@ -4,14 +4,14 @@ import com.ems.ems.dto.EmployeeDto;
 import com.ems.ems.entity.Employee;
 
 public class EmployeeMapper {
-    public static EmployeeDto mapToEmployeeDto (Employee employee){
+    public static EmployeeDto mapToEmployeeDto(Employee employee) {
         return new EmployeeDto(
                 employee.getId(),
                 employee.getFirstName(),
                 employee.getLastName(),
                 employee.getEmail(),
                 employee.getContactNumber(),
-                employee.getAddress()
+                employee.getLocation()
         );
     }
 
@@ -21,8 +21,8 @@ public class EmployeeMapper {
                 employeeDto.getFirstName(),
                 employeeDto.getLastName(),
                 employeeDto.getEmail(),
-                employeeDto.getContactNumber().toString(),
-                employeeDto.getAddress()
+                employeeDto.getContactNumber(),
+                employeeDto.getLocation()
         );
     }
 }
