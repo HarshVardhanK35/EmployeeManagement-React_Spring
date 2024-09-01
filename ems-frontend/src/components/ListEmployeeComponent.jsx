@@ -45,6 +45,10 @@ const ListEmployeeComponent = () => {
     })
   }
 
+  const employeeDetail = (id) => {
+    navigator(`/employee-details/${id}`)
+  }
+
 	return (
 		<div>
 			<h2 className="text-center">Employee Management System</h2>
@@ -71,7 +75,11 @@ const ListEmployeeComponent = () => {
             employees.map((employee) => {
               return (
                 <tr key={employee.id}>
-                  <th scope="row"><a href={``}>{employee.id}</a></th>
+                  <th scope="row">
+                    <button style={{border: "none", textDecoration: 'underline'}}>
+                      <a onClick={() => { return employeeDetail(employee.id) }}>{employee.id}</a>
+                    </button>
+                  </th>
                   <td>{`${employee.firstName} ${employee.lastName}`}</td>
                   <td>{employee.email}</td>
                   <td>{employee.contactNumber}</td>
