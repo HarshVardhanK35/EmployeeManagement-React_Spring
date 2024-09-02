@@ -4,12 +4,9 @@ import EmployeeService from "../services/EmployeeService";
 import { useNavigate, useParams } from "react-router-dom";
 
 const EmployeeDetailComponent = () => {
-
   const { id } = useParams();
-
   const [employee, setEmployee] = useState();
   const navigate = useNavigate();
-
   useEffect(() => {
     EmployeeService.fetchAnEmployee(id)
       .then((res) => {
@@ -19,19 +16,16 @@ const EmployeeDetailComponent = () => {
         console.error(err);
       });
   }, [id]);
-
   const goBack = () => {
     navigate("/employees"); // Navigate back to the employee list
   };
-
   if (!employee) {
     return <div>No employees to show</div>;
   }
-
   return (
     <div>
       <h2 className="text-center">Employee Details</h2>
-      <table className="table table-bordered">
+      <table style={{ margin: "40px"}} className="table table-bordered">
         <thead>
           <tr>
             <th>Employee Fields</th>
@@ -61,7 +55,7 @@ const EmployeeDetailComponent = () => {
           </tr>
         </tbody>
       </table>
-      <button type="button" className="btn btn-primary" onClick={goBack}>
+      <button type="button" className="btn btn-primary" style={{ marginLeft: "20px" }} onClick={goBack}>
         Back to Employee List
       </button>
     </div>

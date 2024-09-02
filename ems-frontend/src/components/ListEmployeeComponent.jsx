@@ -59,7 +59,7 @@ const ListEmployeeComponent = () => {
         <button type="button" className="btn btn-link" onClick={addNewEmployee}>Add Employee</button>
       </div>
 
-			<table className = 'table table-bordered'>
+      <table style={{ margin: "40px" }} className="table table-bordered">
 				<thead>
 					<tr>
 						<th scope="col" style={{textAlign: "center"}}>Employee_id</th>
@@ -77,7 +77,7 @@ const ListEmployeeComponent = () => {
               return (
                 <tr key={employee.id}>
                   <th scope="row">
-                    <button style={{border: "none", textDecoration: 'underline'}}>
+                    <button style={{border: "none", textDecoration: 'underline blue'}}>
                       <a onClick={() => { return employeeDetail(employee.id) }}>{employee.id}</a>
                     </button>
                   </th>
