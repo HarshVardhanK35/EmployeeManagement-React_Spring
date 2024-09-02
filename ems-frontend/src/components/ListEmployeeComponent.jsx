@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { React, useState, useEffect } from "react";
 import EmployeeService from "../services/EmployeeService";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const ListEmployeeComponent = () => {
 
@@ -22,6 +22,7 @@ const ListEmployeeComponent = () => {
   useEffect(() => {
     getAllEmployees()
   }, [])
+
 
   const addNewEmployee = () => {
     navigator("/add-employee")
@@ -71,7 +72,7 @@ const ListEmployeeComponent = () => {
 				</thead>
 
 				<tbody>
-					{
+        {
             employees.map((employee) => {
               return (
                 <tr key={employee.id}>

@@ -27,7 +27,7 @@ const AddEmployeeComponent = () => {
 
     if(id) {
       EmployeeService.fetchAnEmployee(id) .then((res) => {
-        console.log(res.data)
+        // console.log(res.data)
         setFirstName(res.data.firstName)
         setLastName(res.data.lastName)
         setEmail(res.data.email)
