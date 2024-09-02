@@ -62,7 +62,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeDto updateEmployee(Long employeeId, EmployeeDto updatedEmployee) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new ResourceNotFound("Employee does not exist with given Id: "+employeeId)
-        );
+                );
 
         Optional<Employee> existingEmployeeEmail = employeeRepository.findByEmail(updatedEmployee.getEmail());
         if(existingEmployeeEmail.isPresent() && !existingEmployeeEmail.get().getId().equals(employeeId)){

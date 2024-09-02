@@ -1,7 +1,6 @@
 package com.ems.ems.controller;
 
 import com.ems.ems.dto.EmployeeDto;
-import com.ems.ems.exception.ResourceAlreadyExistsExemption;
 import com.ems.ems.service.EmployeeService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +24,10 @@ public class EmployeeController {
     @PostMapping
     public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeDto employeeDto){
         try{
-        EmployeeDto savedEmployee = employeeService.createEmployee(employeeDto);
-        return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
+            EmployeeDto savedEmployee = employeeService.createEmployee(employeeDto);
+            return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
         }
-        catch (ResourceAlreadyExistsExemption e){
+        catch (com.ems.ems.exception.ResourceAlreadyExistsExemption e){
             return new ResponseEntity<>(null, HttpStatus.CONFLICT) ;
         }
     }

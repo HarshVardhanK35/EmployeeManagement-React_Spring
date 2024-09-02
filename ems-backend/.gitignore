@@ -31,21 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-*.log
-/logs
-
-# macOS
-.DS_Store
-# Windows
-Thumbs.db
-
-/target/
-/build/
-
-/src/main/resources/application.properties
-/src/main/resources/application.yml
-
-.env
-
-.idea/
